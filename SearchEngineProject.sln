@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchEngineProject", "SearchEngineProject\SearchEngineProject.csproj", "{BF151FEC-8A8D-4A64-9D22-A024E08B6090}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mixins3", "Mixins\Mixins3.csproj", "{70C35A60-4AE8-4678-BC73-8EEC862129B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF151FEC-8A8D-4A64-9D22-A024E08B6090}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF151FEC-8A8D-4A64-9D22-A024E08B6090}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF151FEC-8A8D-4A64-9D22-A024E08B6090}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF151FEC-8A8D-4A64-9D22-A024E08B6090}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70C35A60-4AE8-4678-BC73-8EEC862129B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70C35A60-4AE8-4678-BC73-8EEC862129B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70C35A60-4AE8-4678-BC73-8EEC862129B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70C35A60-4AE8-4678-BC73-8EEC862129B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B826129E-2153-4F2F-908B-29983D8FD575}
+	EndGlobalSection
+EndGlobal

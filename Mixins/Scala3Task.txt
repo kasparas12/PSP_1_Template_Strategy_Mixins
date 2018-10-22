@@ -1,0 +1,111 @@
+﻿import java.util.{Calendar, Date}
+
+trait FromDollarsToEurConverter {
+  var _currentRate : Double = 0.866;
+  
+  def ConvertCurrency(amount: Double) : Double = {
+    return amount * _currentRate;
+  }
+}
+
+trait FromEurToDollarsConverter {
+  var _currentRate : Double = 1.15;
+  
+  def ConvertCurrency(amount: Double) : Double = {
+    return amount * _currentRate;
+  }
+}
+
+trait LithuaniaIncomeTaxCalculator {
+  var _incomeTax = 0.15;
+  
+  def CalculateTaxes(amount: BigDecimal) : Double = {
+    return _incomeTax * amount.doubleValue();
+  }
+}
+
+trait PolandIncomeTaxCalculator {
+  var _minIncomeTax = 0.18;
+  var _maxIncomeTax = 0.32;
+  
+  def CalculateTaxes(amount: BigDecimal) : Double = {
+    if (amount > 85000) {
+    	return _maxIncomeTax * amount.doubleValue();
+    } else {
+      return _minIncomeTax * amount.doubleValue();
+    }
+  }
+}
+
+trait LTEUCriteriaEvaluator {
+  
+  var membershipDate = 2004;
+  def IsEUCriteriaMatched(age: Int): Boolean = {
+    val year = Calendar.getInstance.get(Calendar.YEAR)
+    return  year - age >= membershipDate;
+
+
+  }
+}
+
+trait CROEUCriteriaEvaluator {
+  
+  var membershipDate = 2013;
+  def IsEUCriteriaMatched(age: Int): Boolean = {
+    val year = Calendar.getInstance.get(Calendar.YEAR)
+    return  year - age >= membershipDate;
+
+
+  }
+}
+
+object Gender extends Enumeration {
+  val Male, Female = Value
+}
+
+class Employee(name: String, surname: String, position: String, gender: Gender.Value, age: Int, nationality: String, salary: BigDecimal){
+  
+  var _name : String = name;
+  var _surname : String = surname;
+  var _position: String = position;
+  var _gender: Gender.Value = gender;
+  var _age: Int = age;
+  var _nationality = nationality;
+  var _salary = salary;
+  
+  def generateReport() : String = {
+    return "This is report about employee " + _name + " " + _surname + ", position - " + _position  +" who is " + _gender + " and " + _age +
+    " years old and currently gets " + _salary + " per month";
+  } 
+}
+
+object Fuel extends Enumeration {
+  val Gasoline, Gas, Diesel, Electric, Hybrid = Value
+}
+
+class Vehicle(brand: String, model: String, year: Integer, price: BigDecimal, registrationCountry: String, fuelType: Fuel.Value, run: Integer, checkUpDate: Date){
+  
+  var _brand : String = brand;
+  var _model : String = model;
+  var _year: Integer = year;
+  var _price: BigDecimal = price;
+  var _registrationCountry: String = registrationCountry;
+  var _fuelType = fuelType;
+  var _run = run;
+  var _checkUpDate = checkUpDate;
+  
+  def isCheckUpValid() : Boolean = {
+    var currentDate: java.time.LocalDate = java.time.LocalDate.now
+    return true;
+	}
+}
+  
+
+var employee = new Employee("John", "Doe", "Manager", Gender.Male, 28, "Croatian", 3000) 
+								with PolandIncomeTaxCalculator with CROEUCriteriaEvaluator with FromEurToDollarsConverter;
+
+
+println(employee.generateReport());
+println("Income tax from salary: " + employee.CalculateTaxes(employee._salary));
+println(employee._name + " earns " + employee._salary  + " EUR, equivalent in  "+ employee.ConvertCurrency(employee._salary.doubleValue()) + "USD")
+println(employee._name + " was born after CRO joined EU? " + employee.IsEUCriteriaMatched(employee._age))
