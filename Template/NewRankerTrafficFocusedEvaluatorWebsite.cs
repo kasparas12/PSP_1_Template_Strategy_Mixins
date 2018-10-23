@@ -4,11 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SearchEngineProject
+namespace Template
 {
-    class NewRanker : IRanker
+    class NewRankerTrafficFocusedEvaluatorWebsite : Website
     {
-        public string DetermineTopic(string resourceContent)
+        private readonly static int thousandRate = 5;
+
+        public NewRankerTrafficFocusedEvaluatorWebsite(string url, int age, string location, int currentPosition, string searchTerm, int trafficPerMonth)
+        : base(url, age, location, currentPosition, searchTerm, trafficPerMonth) { }
+
+        protected override string DetermineTopic(string resourceContent)
         {
             var titleStart = resourceContent.IndexOf("<h1>");
             var titleEnd = resourceContent.IndexOf("</h1>");
@@ -25,16 +30,22 @@ namespace SearchEngineProject
             }
         }
 
-        public string GetAlgorithmDescription() => "The new Panda SERP algorithm";
+        protected override double EstimateWorth(Website website)
+        {
+            return website.TrafficPerMonth / 1000 * thousandRate;
+        }
 
-        public bool IsSpammy(string topic, IWebResource webResource)
+        protected override string GetAlgorithmDescription() => "The new Panda SERP algorithm";
+
+
+        protected override bool IsSpammy(string topic, IWebResource webResource)
         {
             List<string> words = webResource.Content.Split(' ').ToList<string>();
             var totalLength = words.Count;
             int counter = 0;
             double rate;
             Console.WriteLine($"Total words: {totalLength}");
-            foreach(var word in words)
+            foreach (var word in words)
             {
                 if (topic.Contains(word))
                 {

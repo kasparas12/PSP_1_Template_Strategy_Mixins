@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchEngineProject", "Sear
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mixins3", "Mixins\Mixins3.csproj", "{70C35A60-4AE8-4678-BC73-8EEC862129B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template", "Template\Template.csproj", "{5C3CBE7B-2DA3-46ED-8F6E-2BFE8C7F24BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{70C35A60-4AE8-4678-BC73-8EEC862129B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70C35A60-4AE8-4678-BC73-8EEC862129B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70C35A60-4AE8-4678-BC73-8EEC862129B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C3CBE7B-2DA3-46ED-8F6E-2BFE8C7F24BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C3CBE7B-2DA3-46ED-8F6E-2BFE8C7F24BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C3CBE7B-2DA3-46ED-8F6E-2BFE8C7F24BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C3CBE7B-2DA3-46ED-8F6E-2BFE8C7F24BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

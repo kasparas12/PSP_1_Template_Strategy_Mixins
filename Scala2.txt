@@ -1,0 +1,145 @@
+import scala.language.postfixOps
+import scala.collection.mutable.ArrayBuffer
+
+trait IWebResource {
+  var _url : String;
+  var _searchTerm : String;
+  var _content : String
+}
+
+trait TrafficFocusedEvaluator {
+  
+}
+
+trait OldRanker {
+  
+  var _blackList : ArrayBuffer[String]  = ArrayBuffer("Drugs", "Alcohol", "Guns", "Violence", "Pornography", "Gambling", "Casino");
+  
+  def DetermineTopic(resourceContent : String) : String = {
+    var titleStart = resourceContent.indexOf("<title>");
+    var titleEnd = resourceContent.indexOf("</title>");
+    var topic : String = "";
+    
+    if (titleStart == -1 || titleEnd == -1) {
+      return "undefinedTopic"
+    } else {
+      return resourceContent.substring(titleStart + 7, titleEnd);
+    }
+  }
+}
+  
+trait NewRanker {
+    var _blackList : ArrayBuffer[String]  = ArrayBuffer("Drugs", "Alcohol", "Guns", "Violence", "Pornography", "Gambling", "Casino");
+  
+  def DetermineTopic(resourceContent : String) : String = {
+    var titleStart = resourceContent.indexOf("<h1>");
+    var titleEnd = resourceContent.indexOf("</h1>");
+    var topic : String = "";
+    
+    if (titleStart == -1 || titleEnd == -1) {
+      return "undefinedTopic"
+    } else {
+      return resourceContent.substring(titleStart + 4, titleEnd);
+    }
+  }
+}
+  
+  def GetAlgorithmDescription() : String = {
+    return "The new Panda SERP algorithm";
+  }
+  
+  def IsSpammy(topic : String, webResource : IWebResource) : Boolean = {
+    var words = webResource._content.split(' ');
+    var totalLength = words.length;
+    var counter : Int = 0;
+    var rate : Double = 0.00;
+    println("Total words: " + totalLength);
+    for(e<-words) {
+      if (topic contains e) {
+        counter += 1;
+        rate = counter / totalLength;
+        
+        if (rate > 0.05) {
+          println("Detected topic frequency rate is " + rate + " it is a spammy rate!!");
+          return true
+        }
+      }
+    }
+    rate = counter / totalLength;
+    println("Detected topic frequency rate is " + rate + " it is a normal rate");
+    return false;
+}
+
+abstract class Website (url: String, age: Int, location: String, currentPosition: Int, searchTerm: String, trafficPerMonth: Int) extends IWebResource {
+  
+  var _premiumCriteria : Int = 5000;
+  var _url : String = url;
+  var _age : Int = age;
+  var _location : String = location;
+  var _currentPosition: Int = currentPosition;
+  var _searchTerm : String = searchTerm;
+  var _trafficPerMonth : Int = trafficPerMonth;
+  var _isPremium : Boolean = false;
+  var _content : String = "";
+  
+  def CheckForPremiumStatus() : Boolean = {
+    var value : Double = EstimateWorth(this);
+    println("Estimated website value: " + value);
+    
+    if (value > _premiumCriteria) {
+          println("Site applicable to premium");
+      		_isPremium = true;
+      return _isPremium;
+    } else {
+          println("Site not applicable to premium");
+          _isPremium = false;
+      return _isPremium;
+    }
+  }
+  
+  def RecalculateSERP() : Int = {
+    
+    var websiteTopic : String = getWebsiteTopic();
+    
+      if (!isWebSpammy(websiteTopic)) {
+
+        alterRanking(true);
+      } else {
+        alterRanking(false);
+      }
+    	
+    	return _currentPosition;
+  	}
+  
+  private def isWebSpammy(topic: String) : Boolean = {
+    var isSpammy : Boolean = IsSpammy(topic, this);
+    println("Website is condidered spammy?" + isSpammy);
+    return isSpammy;
+  }
+  
+  private def alterRanking(up: Boolean) : Unit = {
+    println("Previous rank: " + _currentPosition);
+    
+    if (up) {
+      if (_currentPosition > 1) {
+        _currentPosition -= 1;
+        println("Website went up after checking with" + GetAlgorithmDescription());
+      }
+    } else {
+        _currentPosition+=1;
+        println("Website went down after checking with" + GetAlgorithmDescription());
+    }
+  }
+  
+  private def getWebsiteTopic() : String = {
+    var topic : String = DetermineTopic(_content);
+    
+    println("Website topic is: " + topic);
+		return topic;
+	}
+  
+  protected def DetermineTopic(resourceContent: String) : String
+  protected def GetAlgorithmDescription() : String
+  protected def IsSpammy(topic: String, webResource : IWebResource) : Boolean
+  protected def EstimateWorth(website : Website) : Double 
+}
