@@ -9,6 +9,33 @@ trait IWebResource {
 
 trait TrafficFocusedEvaluator {
   
+  var thousandRate : Int = 5;
+  
+  def EstimateWorth(website: Website) : Double = {
+      return website._trafficPerMonth/1000 * thousandRate;
+  }
+}
+
+trait SiteMetricsFocusedEvaluator {
+  
+    var _specialCountries : ArrayBuffer[String]  = ArrayBuffer("USA", "Germany", "United Kingdom", "Canada", "Spain");
+  
+    def EstimateWorth(website: Website) : Double = {
+     var worth : Double = 0;
+      
+     if (website._age > 5) {
+       worth += 1000 * website._age
+     } else {
+       worth += 200 * website._age
+     }
+      
+      for (country <- _specialCountries) {
+        if (country == website._location) {
+          worth += 5000l
+        }
+      }
+      return worth;
+  }
 }
 
 trait OldRanker {
@@ -26,49 +53,90 @@ trait OldRanker {
       return resourceContent.substring(titleStart + 7, titleEnd);
     }
   }
+  
+  def GetAlgorithmDescription() : String = {
+      return "Old 90s algorithm";
+  }
+  
+      def IsSpammy(topic : String, webResource : IWebResource) : Boolean = {
+				for(word <- _blackList) {
+          if ((webResource._url.toLowerCase() contains word.toLowerCase()) || (webResource._content.toLowerCase() contains word.toLowerCase()) || (topic.toLowerCase() contains word.toLowerCase()) ) {
+            return true
+          }        
+        }
+        return false;
+  		}
 }
   
 trait NewRanker {
     var _blackList : ArrayBuffer[String]  = ArrayBuffer("Drugs", "Alcohol", "Guns", "Violence", "Pornography", "Gambling", "Casino");
   
-  def DetermineTopic(resourceContent : String) : String = {
-    var titleStart = resourceContent.indexOf("<h1>");
-    var titleEnd = resourceContent.indexOf("</h1>");
-    var topic : String = "";
-    
-    if (titleStart == -1 || titleEnd == -1) {
-      return "undefinedTopic"
-    } else {
-      return resourceContent.substring(titleStart + 4, titleEnd);
-    }
-  }
-}
-  
-  def GetAlgorithmDescription() : String = {
-    return "The new Panda SERP algorithm";
-  }
-  
-  def IsSpammy(topic : String, webResource : IWebResource) : Boolean = {
-    var words = webResource._content.split(' ');
-    var totalLength = words.length;
-    var counter : Int = 0;
-    var rate : Double = 0.00;
-    println("Total words: " + totalLength);
-    for(e<-words) {
-      if (topic contains e) {
-        counter += 1;
-        rate = counter / totalLength;
-        
-        if (rate > 0.05) {
-          println("Detected topic frequency rate is " + rate + " it is a spammy rate!!");
-          return true
-        }
+    def DetermineTopic(resourceContent : String) : String = {
+      var titleStart = resourceContent.indexOf("<h1>");
+      var titleEnd = resourceContent.indexOf("</h1>");
+      var topic : String = "";
+
+      if (titleStart == -1 || titleEnd == -1) {
+        return "undefinedTopic"
+      } else {
+        return resourceContent.substring(titleStart + 4, titleEnd);
       }
     }
-    rate = counter / totalLength;
-    println("Detected topic frequency rate is " + rate + " it is a normal rate");
-    return false;
+
+      def GetAlgorithmDescription() : String = {
+      return "The new Panda SERP algorithm";
+    }
+  
+    def IsSpammy(topic : String, webResource : IWebResource) : Boolean = {
+      var words = webResource._content.split(' ');
+      var totalLength = words.length;
+      var counter : Int = 0;
+      var rate : Double = 0.00;
+      println("Total words: " + totalLength);
+      for(e<-words) {
+        if (topic contains e) {
+          counter += 1;
+          rate = (counter.toDouble / totalLength).toDouble;
+
+          if (rate > 0.05) {
+            println("Detected topic frequency rate is " + rate + " it is a spammy rate!!");
+            return true
+          }
+        }
+      }
+      rate = (counter.toDouble / totalLength).toDouble;
+      println("Detected topic frequency rate is " + rate + " it is a normal rate");
+      return false;
+  }
 }
+
+abstract class Video (url: String, searchTerm: String, title: String, views: Int) extends IWebResource {
+  var _url : String = url;
+  var _searchTerm : String = searchTerm;
+  var _title : String = title;
+  var _views : Int = views;
+  var _content : String = "";
+  
+  var _deleted : Boolean = false;
+  
+  def ToBeSuspended() : Boolean = {
+    println("Checking video using " + GetAlgorithmDescription());
+    
+    if (IsSpammy(_title, this)) {
+      println("Content does not match title, video will be removed");
+      _deleted = true;
+      return true;
+    } else {
+    	println("Content does match title, video will not be removed");
+      _deleted = false;
+      return false;
+    }
+  }
+  
+  protected def GetAlgorithmDescription() : String
+  protected def IsSpammy(topic: String, webResource : IWebResource) : Boolean
+}
+  
 
 abstract class Website (url: String, age: Int, location: String, currentPosition: Int, searchTerm: String, trafficPerMonth: Int) extends IWebResource {
   
@@ -143,3 +211,13 @@ abstract class Website (url: String, age: Int, location: String, currentPosition
   protected def IsSpammy(topic: String, webResource : IWebResource) : Boolean
   protected def EstimateWorth(website : Website) : Double 
 }
+
+var website : Website = new Website("https://casino.com", 5, "USA", 1, "best casino", 500000) with OldRanker with TrafficFocusedEvaluator
+//var website : Website = new Website("https://casino.com", 5, "USA", 1, "best casino", 500000) with NewRanker with SiteMetricsFocusedEvaluator
+website._content = "<!DOCTYPE html><html><head><meta charset='utf-8' /<meta http-equiv='X-UA-Compatible' content='IE=edge'><title>Some casino website</title><meta name='viewport' content='width=device-width, initial-scale=1'><link rel='stylesheet' type='text/css' media='screen' href='main.css' /><script src='main.js'></script></head><body><h1>Casino</h1><p>Lorem ipsum dolor sit Casino amet consectetur adipisicing elit. Temporibus repellendus dicta, dolores voluptates assumenda suscipit possimus. Veritatis impedit blanditiis vel! Officiis, explicabo eveniet quas nemo aliquid impedit incidunt maiores soluta.Quam vero culpa ipsum iste consequuntur magni obcaecati praesentium id </p></body></html>"
+website.RecalculateSERP();
+website.CheckForPremiumStatus();
+
+var video : Video = new Video("https://www.youtube.com/watch?v=szk1wnalFRQ", "cernobylio avarija", "Praeities Atgarsiai: Cernobylio avarija", 4750) with NewRanker
+video._content = "Pasakojimas apie Cernobyli ir šalia jo avarija esanti apleista miesta Pripete. Laidos FaceBook: https://www.facebook.com/praeitiesatg... Autoriaus FaceBook: https://www.facebook.com/andriuspl/ Instagram: https://www.instagram.com/praeities_a... Internetine svetaine: http://praeitiesatgarsiai.lt"
+video.ToBeSuspended();

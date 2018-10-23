@@ -1,4 +1,10 @@
 ﻿import java.util.{Calendar, Date}
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
+
 
 trait FromDollarsToEurConverter {
   var _currentRate : Double = 0.866;
@@ -42,9 +48,13 @@ trait LTEUCriteriaEvaluator {
   var membershipDate = 2004;
   def IsEUCriteriaMatched(age: Int): Boolean = {
     val year = Calendar.getInstance.get(Calendar.YEAR)
-    return  year - age >= membershipDate;
+    
+    if (age > 1000) {
+          return  age >= membershipDate;
+    } else {
+          return  year - age >= membershipDate;
 
-
+    }
   }
 }
 
@@ -53,7 +63,12 @@ trait CROEUCriteriaEvaluator {
   var membershipDate = 2013;
   def IsEUCriteriaMatched(age: Int): Boolean = {
     val year = Calendar.getInstance.get(Calendar.YEAR)
-    return  year - age >= membershipDate;
+        if (age > 1000) {
+          return  age >= membershipDate;
+    } else {
+          return  year - age >= membershipDate;
+
+    }
 
 
   }
@@ -83,29 +98,75 @@ object Fuel extends Enumeration {
   val Gasoline, Gas, Diesel, Electric, Hybrid = Value
 }
 
-class Vehicle(brand: String, model: String, year: Integer, price: BigDecimal, registrationCountry: String, fuelType: Fuel.Value, run: Integer, checkUpDate: Date){
+class Vehicle(brand: String, model: String, year: Integer, price: BigDecimal, fuelType: Fuel.Value, run: Integer, checkUpDate: Date){
   
   var _brand : String = brand;
   var _model : String = model;
   var _year: Integer = year;
   var _price: BigDecimal = price;
-  var _registrationCountry: String = registrationCountry;
   var _fuelType = fuelType;
   var _run = run;
   var _checkUpDate = checkUpDate;
   
   def isCheckUpValid() : Boolean = {
-    var currentDate: java.time.LocalDate = java.time.LocalDate.now
-    return true;
+    var currentDate: LocalDateTime = LocalDateTime.now;
+    var timestamp : Instant = _checkUpDate.toInstant(); 
+    var checkuplocaldate : LocalDateTime = LocalDateTime.ofInstant(timestamp, ZoneId.systemDefault()); 
+    
+    var tempDateTime : LocalDateTime = LocalDateTime.from( checkuplocaldate );
+    var years : Long = tempDateTime.until( currentDate, ChronoUnit.YEARS)
+    if (years < 2) {
+         return true; 
+    } else {
+      return false;
+    }
 	}
+}
+
+class RealEstate (name : String, price: BigDecimal, age: Int,  location: String, width: Int, height: Int) {
+  var _name : String = name;
+  var _price : BigDecimal = price;
+  var _age : Int = age;
+  var _width : Int = width;
+  var _height : Int = height;
+  var _location : String = location;
+  
+  def CalculatePricePerSquareMeter() : BigDecimal = {
+    return _price / GetArea()
+  }
+  
+  def GetArea() : Int = {
+    return _width * _height;
+  }
 }
   
 
 var employee = new Employee("John", "Doe", "Manager", Gender.Male, 28, "Croatian", 3000) 
 								with PolandIncomeTaxCalculator with CROEUCriteriaEvaluator with FromEurToDollarsConverter;
 
+val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
+
+var vehicle = new Vehicle("Toyota", "Avensis", 2008, 9000, Fuel.Diesel, 100000, format.parse("2017-05-04"))
+                        with LithuaniaIncomeTaxCalculator with LTEUCriteriaEvaluator with FromDollarsToEurConverter;
+
+var realEstate = new RealEstate("Villa Croatia", 2000000, 5, "Croatia", 25, 20)
+                        with LithuaniaIncomeTaxCalculator with CROEUCriteriaEvaluator with FromEurToDollarsConverter;
+                          
+println("Checkup for this vehicle is valid?" + vehicle.isCheckUpValid());
+println("Income tax from this car in LT: " + vehicle.CalculateTaxes(vehicle._price));
+println("Car costs " +vehicle._price+ " dollars, equivalent in " + vehicle.ConvertCurrency(vehicle._price.toDouble) + "EUR")
+println("This car was made after LT joined EU? " + vehicle.IsEUCriteriaMatched(vehicle._year))
+
+println(" ")
 
 println(employee.generateReport());
 println("Income tax from salary: " + employee.CalculateTaxes(employee._salary));
 println(employee._name + " earns " + employee._salary  + " EUR, equivalent in  "+ employee.ConvertCurrency(employee._salary.doubleValue()) + "USD")
 println(employee._name + " was born after CRO joined EU? " + employee.IsEUCriteriaMatched(employee._age))
+
+println(" ")
+
+println("Real estate name: " + realEstate._name + ", price per square meter: " + realEstate.CalculatePricePerSquareMeter())
+println("Income tax from this real estate in PL: " + realEstate.CalculateTaxes(realEstate._price))
+println("Object costs " + realEstate._price + " EUR, equivalent in " + realEstate.ConvertCurrency(realEstate._price.toDouble)  + " USD")
+println("This object was build after CRO joined EU? " + realEstate.IsEUCriteriaMatched(realEstate._age))

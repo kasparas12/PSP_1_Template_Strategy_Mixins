@@ -10,8 +10,8 @@ namespace Template
     {
         static void Main(string[] args)
         {
-            var website = new NewRankerSiteMetricsFocusedEvaluatorWebsite("https://casino.com", 5, "USA", 1, "best casino", 500000);
-            //var website = new OldRankerTrafficFocusedEvaluatorWebsite("https://casino.com", 5, "USA", 1, "best casino", 500000);
+            //var website = new NewRankerSiteMetricsFocusedEvaluatorWebsite("https://casino.com", 5, "USA", 1, "best casino", 500000);
+            var website = new OldRankerTrafficFocusedEvaluatorWebsite("https://casino.com", 5, "USA", 1, "best casino", 500000);
             website.Content = @"<!DOCTYPE html><html><head><meta charset='utf-8' /<meta http-equiv='X-UA-Compatible' content='IE=edge'><title>Some casino website</title><meta name='viewport' content='width=device-width, initial-scale=1'><link rel='stylesheet' type='text/css' media='screen' href='main.css' /><script src='main.js'></script></head><body><h1>Casino</h1><p>Lorem ipsum dolor sit Casino amet consectetur adipisicing elit. Temporibus repellendus dicta, dolores voluptates assumenda suscipit possimus. Veritatis impedit blanditiis vel! Officiis, explicabo eveniet quas nemo aliquid impedit incidunt maiores soluta.Quam vero culpa ipsum iste consequuntur magni obcaecati praesentium id </p></body></html>";
 
             website.RecalculateSERP();
