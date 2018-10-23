@@ -9,6 +9,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mixins3", "Mixins\Mixins3.c
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template", "Template\Template.csproj", "{5C3CBE7B-2DA3-46ED-8F6E-2BFE8C7F24BD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FirstTask", "FirstTask", "{C9AB5764-2F89-4928-9747-CCCAB42A1D16}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SecondTask", "SecondTask", "{54F67601-F778-4445-BEBC-2FEF3194B467}"
+	ProjectSection(SolutionItems) = preProject
+		Scala2.txt = Scala2.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdTask", "ThirdTask", "{99C6DD0B-E294-4494-80A0-BA6FB03E18BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +39,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BF151FEC-8A8D-4A64-9D22-A024E08B6090} = {C9AB5764-2F89-4928-9747-CCCAB42A1D16}
+		{70C35A60-4AE8-4678-BC73-8EEC862129B8} = {99C6DD0B-E294-4494-80A0-BA6FB03E18BA}
+		{5C3CBE7B-2DA3-46ED-8F6E-2BFE8C7F24BD} = {C9AB5764-2F89-4928-9747-CCCAB42A1D16}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B826129E-2153-4F2F-908B-29983D8FD575}
